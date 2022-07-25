@@ -121,14 +121,26 @@
         :loading="loading"
         :sort-by="['posicao']"
         :sort-desc="[false]"
+        :single-expand="true"
+        :expanded.sync="expanded"
+        item-key="id"
+        show-expand
         class="elevation-1"
       >
-      <template v-slot:no-data >
-        <div style="color: red; font-weight: bold; text-transform: uppercase;">
-        Ranking ainda não calculado!
-        Em breve os administradores irão efetuá-lo.
-        </div>
-      </template>
+        <template v-slot:no-data >
+          <div style="color: red; font-weight: bold; text-transform: uppercase;">
+          Ranking ainda não calculado!
+          Em breve os administradores irão efetuá-lo.
+          </div>
+        </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            1ª semana: <strong style="color:yellow;">{{ item.firstWeek }}</strong>&nbsp;&nbsp;|&nbsp;&nbsp;
+            2ª semana: <strong style="color:yellow;">{{ item.secondWeek }}</strong>&nbsp;&nbsp;|&nbsp;&nbsp;
+            3ª semana: <strong style="color:yellow;">{{ item.thirdWeek }}</strong>&nbsp;&nbsp;|&nbsp;&nbsp;
+            4ª semana: <strong style="color:yellow;">{{ item.fourthWeek }}</strong>
+          </td>
+        </template>
       </v-data-table>
     </base-material-card>
   </v-container>
@@ -140,6 +152,7 @@ import api from "@/api";
 export default {
     data () {
       return {
+        expanded: [],
         confirmDialog: false,
         loading: true,
         headers: [
@@ -149,11 +162,8 @@ export default {
             value: 'posicao',
           },
           { text: 'Nickname', value: 'nickname' },
-          { text: '1ª semana', value: 'firstWeek' },
-          { text: '2ª semana', value: 'secondWeek' },
-          { text: '3ª semana', value: 'thirdWeek' },
-          { text: '4ª semana', value: 'fourthWeek' },
           { text: 'Total', value: 'totalPoints' },
+          { text: '', value: 'data-table-expand' },
         ],
         rankeds: [],
         file: null,
