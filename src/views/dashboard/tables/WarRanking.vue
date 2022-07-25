@@ -64,8 +64,8 @@
         <v-row align="center">
           <v-col
             class="d-flex"
-            cols="2"
-            sm="1"
+            cols="4"
+            sm="3"
           >
             <v-select
               v-model="week"
@@ -78,8 +78,8 @@
           </v-col>
           <v-col
             class="d-flex  margin-bottom-auto"
-            cols="6"
-            sm="6"
+            cols="4"
+            sm="2"
           >
             <v-btn
               color="success"
