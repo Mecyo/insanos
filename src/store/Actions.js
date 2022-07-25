@@ -18,7 +18,7 @@ export default {
         const token = response.data.token.replace('Bearer ', '');
         commit(types.UPDATE_USER, response.data);
         commit(types.UPDATE_TOKEN, token);
-        $cookies.set(cookieName, token)
+        $cookies.set(cookieName, token, '1d', '/', process.env.VUE_APP_API_COOKIE_URL)
 
         return response.data;
       })
