@@ -85,9 +85,10 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function loginComToken() {
+  const cookieName = process.env.VUE_APP_API_COOKIE_NAME;
   let token = store.state.token;
-  if (!token && $cookies.isKey(process.env.VUE_APP_API_COOKIE_NAME)) {
-    token = $cookies.get(process.env.VUE_APP_API_COOKIE_NAME);
+  if (!token && $cookies.isKey(cookieName)) {
+    token = $cookies.get(cookieName);
   }
 
   if (token) {

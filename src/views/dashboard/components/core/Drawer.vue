@@ -65,8 +65,7 @@
         </base-item-group>
 
         <base-item
-          v-else
-          v-if="item.hasPermission"
+          v-else-if="item.hasPermission"
           :key="`item-${i}`"
           :item="item"
         />
@@ -127,7 +126,7 @@ import router from '@/router/index';
         const store = this.$store;
         const state = store.state;
         const user = state.user;
-        return `Olá, ${user.nome.split(" ")[0]}`;
+        return user && user.nome ? `Olá, ${user.nome.split(" ")[0]}` : 'Olá, visitante';
       },
       profile () {
         return {

@@ -10,12 +10,15 @@ export default {
    * @param {*} credentials email e senha do usuário
    */
   login({ commit }, credentials) {
-    $cookies.remove(process.env.VUE_APP_API_COOKIE_NAME);
+    const cookieName = process.env.VUE_APP_API_COOKIE_NAME;
+    $cookies.remove(cookieName);
     $cookies.remove('JSESSIONID');
     return api.post('/authenticate', credentials)
       .then((response) => {
+        const token = response.data.token.replace('Bearer ', '');
         commit(types.UPDATE_USER, response.data);
-        commit(types.UPDATE_TOKEN, response.data.token.replace('Bearer ', ''));
+        commit(types.UPDATE_TOKEN, token);
+        $cookies.set(cookieName, token)
 
         return response.data;
       })
