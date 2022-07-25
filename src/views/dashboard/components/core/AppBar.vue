@@ -116,7 +116,7 @@
           min-width="0"
           text
           v-bind="attrs"
-          v-on="{ ...tooltip, ...menu }"
+          v-on="{ ...menu }"
         >
           <v-icon>mdi-account</v-icon>
         </v-btn>

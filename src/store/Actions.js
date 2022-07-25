@@ -21,17 +21,6 @@ export default {
         $cookies.set(cookieName, token, '1d', '/', process.env.VUE_APP_API_COOKIE_URL)
 
         return response.data;
-      })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.error) {
-          this.$toast.error("Falha ao efetuar o login: " + error.response.data.error, {
-            dismissable: true,
-            x: 'center',
-            y: 'top',
-            timeout: 4000,
-          })
-        }
-        console.log(error);
       });
   },
 
