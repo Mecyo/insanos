@@ -111,20 +111,15 @@
 
     <v-menu>
       <template v-slot:activator="{ on: menu, attrs }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on: tooltip }">
-            <v-btn
-              class="ml-2"
-              min-width="0"
-              text
-              v-bind="attrs"
-              v-on="{ ...tooltip, ...menu }"
-            >
-              <v-icon>mdi-account</v-icon>
-            </v-btn>
-          </template>
-          <span>Opções</span>
-        </v-tooltip>
+        <v-btn
+          class="ml-2"
+          min-width="0"
+          text
+          v-bind="attrs"
+          v-on="{ ...tooltip, ...menu }"
+        >
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
       </template>
       <v-list>
         <v-list-item
