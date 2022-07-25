@@ -19,6 +19,15 @@ export default [
       requireRoles: ['ROLE_USER']
     },
   },
+  {
+    name: 'Registro de Player',
+    path: 'player-register',
+    component: () => import('@/views/dashboard/pages/PlayerProfile'),
+    meta: {
+      requiresAuth: true,
+      requireRoles: ['ROLE_USER']
+    },
+  },
   // Tables
   {
     name: 'Lista de players',

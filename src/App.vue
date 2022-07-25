@@ -14,3 +14,9 @@ export default {
   },
 }
 </script>
+
+<style>
+  .hidden {
+    display: none !important;
+  }
+</style>

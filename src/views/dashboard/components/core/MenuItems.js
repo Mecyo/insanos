@@ -7,8 +7,8 @@ export default [
     },
     {
       icon: 'mdi-account',
-      title: 'Registro de usuários',
-      path: 'user-register',
+      title: 'Registro de Players',
+      path: 'player-register',
       requireRoles: ['ROLE_USER'],
       items: []
     },
