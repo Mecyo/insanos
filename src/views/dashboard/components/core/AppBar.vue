@@ -109,14 +109,33 @@
       </v-list>
     </v-menu>
 
-    <v-btn
-      class="ml-2"
-      min-width="0"
-      text
-      to="/pages/user"
-    >
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+    <v-menu>
+      <template v-slot:activator="{ on: menu, attrs }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn
+              class="ml-2"
+              min-width="0"
+              text
+              v-bind="attrs"
+              v-on="{ ...tooltip, ...menu }"
+            >
+              <v-icon>mdi-account</v-icon>
+            </v-btn>
+          </template>
+          <span>Opções</span>
+        </v-tooltip>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          @click="listItemAction(item)"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
@@ -172,6 +191,10 @@
         'Another Notification',
         'Another one',
       ],
+      items: [
+        { title: 'Registro', action: 'registro' },
+        { title: 'Sair', action: 'logout' },
+      ],
     }),
 
     computed: {
@@ -182,8 +205,25 @@
       ...mapMutations({
         setDrawer: 'SET_DRAWER',
       }),
+      listItemAction(item) {
+        switch (item.action) {
+          case 'logout':
+            this.$store.dispatch('logout');
+            this.$router.replace({
+              path: '/',
+            }).catch(err => {});
+            break;
+          case 'registro':
+            this.$router.replace({
+              path: 'user-register',
+            }).catch(err => {});
+            break;
+          default:
+            break;
+        }
+      },
       pesquisar() {
-        console.log(this.$state)
+        console.log(this.$state);
       }
     },
   }
