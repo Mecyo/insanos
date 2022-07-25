@@ -41,7 +41,7 @@ export default {
    * @param {*} commit, função derivada do contexto da store
    */
   logout({ commit }) {
-    $cookies.remove(process.env.VUE_APP_API_COOKIE_NAME);
+    $cookies.remove(process.env.VUE_APP_API_COOKIE_NAME, null, process.env.VUE_APP_API_COOKIE_URL);
     commit(types.UPDATE_USER, null);
     commit(types.UPDATE_TOKEN, null);
   },
