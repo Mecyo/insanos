@@ -28,7 +28,6 @@ Vue.config.productionTip = false;
 
 Vue.directive('can', {
   inserted(el, binding, vnode, old) {
-    debugger
     var permissions = store.state.user.permissoes;
     if (!permissions.includes(binding.value)) {
       vnode.elm.parentElement.removeChild(vnode.elm)
