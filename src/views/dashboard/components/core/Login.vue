@@ -179,13 +179,11 @@ import api from "@/api";
     methods: {
       logar() {
         if (this.$refs.formLogin.validate()) {
-          api.post('/authenticate', this.user)
-            .then((data) => {
-              this.$store.commit('UPDATE_USER', data.data);
+          this.$store.dispatch('login', this.user)
+          .then((data) => {
               this.$router.replace({
                 path: 'app/dashboard',
               });
-              //this.$router.push("").catch((error)=>{console.log(error);});
             })
             .catch((error) => {
               if (error.response && error.response.data && error.response.data.error) {
