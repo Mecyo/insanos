@@ -160,6 +160,7 @@
 <script>
 import VueTelInputVuetify from "vue-tel-input-vuetify/lib/vue-tel-input-vuetify.vue"
 import api from "@/api";
+import axios from "axios";
 
   export default {
     components: {
@@ -177,8 +178,21 @@ import api from "@/api";
       }
     },
     methods: {
+      buscarApi() {
+        debugger
+        const AuthStr = 'Bearer '.concat(process.env.VUE_APP_CLASH_API_TOKEN); 
+        axios.get(`${process.env.VUE_APP_CLASH_API_URL}/clans/YV88PJ08/warlog?limit=100`, { headers: { Authorization: AuthStr } })
+        .then(response => {
+            // If request is good...
+            console.log(response.data);
+          })
+        .catch((error) => {
+            console.log('error ' + error);
+          });
+      },
       logar() {
         if (this.$refs.formLogin.validate()) {
+          this.buscarApi();
           this.$store.dispatch('login', this.user)
           .then((data) => {
               this.$router.replace({
