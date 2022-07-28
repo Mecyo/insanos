@@ -17,7 +17,18 @@
     </v-dialog>
     <v-dialog v-model="banDialog" max-width="500px">
       <v-card>
-        <v-card-title class="text-h5">Tem certeza que deseja banir o player '{{this.editedItem.nickname}}'?</v-card-title>
+        <v-card-title class="text-h5">Tem certeza que deseja banir o player <strong style="color:red">{{this.editedItem.nickname}}</strong>?</v-card-title>
+        <v-row>
+          <v-col>
+            <v-textarea
+              required
+              v-model="editedItem.motivoBanimento"
+              outlined
+              name="input-7-4"
+              label="Motivo do banimento*"
+            ></v-textarea>
+          </v-col>
+        </v-row>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="success" @click="closeBan">Cancelar</v-btn>
@@ -61,12 +72,37 @@
         <template v-slot:[`item.dataRegistro`]="{ item }">
           <span>{{ new Date(item.dataRegistro).toLocaleString() }}</span>
         </template>
+        <template v-slot:[`item.id`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.id }}</span>
+          <span v-else >{{ item.id }}</span>
+        </template>
+        <template v-slot:[`item.nickname`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.nickname }}</span>
+          <span v-else >{{ item.nickname }}</span>
+        </template>
+        <template v-slot:[`item.cliente.nome`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.cliente.nome }}</span>
+          <span v-else >{{ item.cliente.nome }}</span>
+        </template>
+        <template v-slot:[`item.clan.nome`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.clan.nome }}</span>
+          <span v-else >{{ item.clan.nome }}</span>
+        </template>
+        <template v-slot:[`item.nivel`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.nivel }}</span>
+          <span v-else >{{ item.nivel }}</span>
+        </template>
+        <template v-slot:[`item.dataRegistro`]="{ item }">
+          <span v-if="item.dataBanimento" style="color:red;">{{ item.dataRegistro }}</span>
+          <span v-else >{{ item.dataRegistro }}</span>
+        </template>
         <template v-slot:[`item.dataBanimento`]="{ item }">
-          <span style="color:red;">{{ item.dataBanimento ? 'SIM' : 'NÃO' }}</span>
+          <span v-if="item.dataBanimento" style="color:red;">SIM</span>
+          <span v-else >NÃO</span>
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
-            :class="isSuperUser() ? '' : 'hidden'"
+            :class="isSuperUser() && !item.dataBanimento ? '' : 'hidden'"
             color="yellow"
             small
             title="Tornar admin"
@@ -111,6 +147,9 @@ export default {
         editedItem: {
           nickname: ''
         },
+        defaultItem: {
+          nickname: '',
+        },
         headers: [
           {
             text: 'ID',
@@ -147,13 +186,15 @@ export default {
         return this.$store.state.user.id === player.cliente.id;
       },
       addToBlackList(player) {
+        this.editedIndex = this.players.indexOf(player);
         this.editedItem = Object.assign({}, player);
         this.banDialog = true;
       },
       banItemConfirm() {
         api.post("/players/ban", this.editedItem)
           .then(() => {
-            this.$toast.success(`Player ${this.editedItem.nome} banido com sucesso!`, {
+            this.players[this.editedIndex].dataBanimento = new Date().toLocaleString();
+            this.$toast.success(`Player <strong style="color:yellow;">${this.editedItem.nickname}</strong> banido com sucesso!`, {
                 dismissable: true,
                 x: 'center',
                 y: 'top',

@@ -19,6 +19,18 @@
       Adicionar
     </v-btn>
 
+    <v-dialog v-model="unbanDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">Tem certeza que deseja remover o banimento do player <strong style="color:green">{{this.editedItem.nickname}}</strong>?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="closeUnban">Cancelar</v-btn>
+          <v-btn color="warning" @click="unbanItemConfirm">Remover Banimento</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog
       v-model="addDialog"
       persistent
@@ -108,7 +120,18 @@
       <template v-slot:[`item.dataRegistro`]="{ item }">
         <span>{{ new Date(item.dataRegistro).toLocaleString() }}</span>
       </template>
-    </v-data-table>
+      <template v-slot:item.actions="{ item }">
+          <v-icon
+            :class="isSuperUser() || isAdminUser() ? '' : 'hidden'"
+            color="success"
+            small
+            title="Remover ban"
+            @click="removeBan(item)"
+          >
+            mdi-lock-open-variant
+          </v-icon>
+        </template>
+      </v-data-table>
     </base-material-card>
   </v-container>
 </template>
@@ -122,6 +145,14 @@ export default {
         loading: true,
         options: {},
         addDialog: false,
+        unbanDialog: false,
+        editedIndex: -1,
+        editedItem: {
+          nickname: ''
+        },
+        defaultItem: {
+          nickname: '',
+        },
         player: {},
         totalBanneds: 0,
         filter: '',
@@ -134,6 +165,7 @@ export default {
           { text: 'Nickname', value: 'nickname' },
           { text: 'Banido por', value: 'banidoPor' },
           { text: 'Data de banimento', value: 'dataBanimento' },
+          { text: 'Ações', value: 'actions', sortable: false },
         ],
         players: [],
       }
@@ -150,6 +182,52 @@ export default {
         },
       },
     methods: {
+      removeBan(player) {
+        this.editedIndex = this.players.indexOf(player);
+        this.editedItem = Object.assign({}, player);
+        this.unbanDialog = true;
+      },
+       closeBan () {
+        this.unbanDialog = false;
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem);
+        });
+      },
+      unbanItemConfirm() {
+        api.post(`/players/unban/${this.editedItem.id}`)
+          .then(() => {
+            this.players.splice(this.editedIndex, 1);
+            this.$toast.success(`Banimento do player <strong style="color:yellow;">${this.editedItem.nickname}</strong> removido com sucesso!`, {
+                dismissable: true,
+                x: 'center',
+                y: 'top',
+                timeout: 4000,
+              })
+          })
+          .catch((error) => {
+            this.$toast.error("Falha ao remover o banimento: " + error.response.data.titulo, {
+                dismissable: true,
+                x: 'center',
+                y: 'top',
+                timeout: 4000,
+              })
+            console.log(error);
+          });
+          this.unbanDialog = false;
+      },
+      closeUnban () {
+        this.unbanDialog = false;
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem);
+          this.editedIndex = -1;
+        });
+      },
+      isSuperUser() {
+        return this.$store.state.user.permissoes.includes('ROLE_SUPER');
+      },
+      isAdminUser() {
+        return this.$store.state.user.permissoes.includes('ROLE_ADMIN');
+      },
       searchByFilter() {
         if(this.filter.length > 2) {
           this.getDataFromApi ();
