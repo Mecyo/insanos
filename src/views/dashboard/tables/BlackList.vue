@@ -194,7 +194,7 @@ export default {
         });
       },
       unbanItemConfirm() {
-        api.post(`/players/unban/${this.editedItem.id}`)
+        api.get(`/players/unban/${this.editedItem.id}`)
           .then(() => {
             this.players.splice(this.editedIndex, 1);
             this.$toast.success(`Banimento do player <strong style="color:yellow;">${this.editedItem.nickname}</strong> removido com sucesso!`, {
