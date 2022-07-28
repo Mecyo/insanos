@@ -235,6 +235,7 @@ export default {
       },
       add() {
         if(this.$refs.form.validate()) {
+          this.player.banidoPor = this.$store.state.user.nome;
           api.post("/players/ban", this.player)
           .then(() => {
             this.$toast.success("Banido com sucesso!", {
