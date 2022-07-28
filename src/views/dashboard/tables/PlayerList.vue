@@ -191,6 +191,7 @@ export default {
         this.banDialog = true;
       },
       banItemConfirm() {
+        this.editedItem.banidoPor = this.$store.state.user.nome;
         api.post("/players/ban", this.editedItem)
           .then(() => {
             this.players[this.editedIndex].dataBanimento = new Date().toLocaleString();
