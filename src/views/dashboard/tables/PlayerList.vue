@@ -52,9 +52,19 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
+            :class="isSuperUser() ? '' : 'hidden'"
+            color="warning"
+            small
+            title="Tornar admin"
+            @click="setToAdmin(item)"
+          >
+            mdi-key-change
+          </v-icon>
+          <v-icon
             :class="item.isOwner ? '' : 'hidden'"
             color="error"
             small
+            title="Excluir"
             @click="deleteItem(item)"
           >
             mdi-delete
@@ -107,6 +117,27 @@ export default {
       },
       isPlayerOwner(player) {
         return this.$store.state.user.id === player.cliente.id;
+      },
+      setToAdmin(item) {
+        const cliente = item.cliente;
+        api.get(`/clientes/set-to-admin/${cliente.id}`)
+        .then(() => {
+          this.$toast.success(`ROLE_ADMIN adicionada ao user: ${cliente.nome} com sucesso!`, {
+              dismissable: true,
+              x: 'center',
+              y: 'top',
+              timeout: 4000,
+            })
+        })
+        .catch((error) => {
+          this.$toast.error("Falha ao adicionar ROLE_ADMIN: " + error.response.data.titulo, {
+              dismissable: true,
+              x: 'center',
+              y: 'top',
+              timeout: 4000,
+            })
+          console.log(error);
+        });
       },
       deleteItem (item) {
         this.editedIndex = this.players.indexOf(item)
