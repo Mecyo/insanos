@@ -61,6 +61,9 @@
         <template v-slot:[`item.dataRegistro`]="{ item }">
           <span>{{ new Date(item.dataRegistro).toLocaleString() }}</span>
         </template>
+        <template v-slot:[`item.dataBanimento`]="{ item }">
+          <span style="color:red;">{{ item.dataBanimento ? 'SIM' : 'NÃO' }}</span>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
             :class="isSuperUser() ? '' : 'hidden'"
@@ -72,7 +75,7 @@
             mdi-key-change
           </v-icon>
           <v-icon
-            :class="isAdminUser() ? '' : 'hidden'"
+            :class="isAdminUser() && !item.dataBanimento ? '' : 'hidden'"
             color="warning"
             small
             title="Banir player"
@@ -119,6 +122,7 @@ export default {
           { text: 'Clã', value: 'clan.nome' },
           { text: 'Nível', value: 'nivel' },
           { text: 'Data de registro', value: 'dataRegistro' },
+          { text: 'Banido?', value: 'dataBanimento' },
           { text: 'Ações', value: 'actions', sortable: false },
         ],
         players: [],
