@@ -160,7 +160,6 @@
 <script>
 import VueTelInputVuetify from "vue-tel-input-vuetify/lib/vue-tel-input-vuetify.vue"
 import api from "@/api";
-import axios from "axios";
 
   export default {
     components: {
@@ -178,24 +177,8 @@ import axios from "axios";
       }
     },
     methods: {
-      buscarApi() {
-        debugger
-        //const AuthStr = 'Bearer '.concat(process.env.VUE_APP_CLASH_API_TOKEN); 
-        //axios.get(`${process.env.VUE_APP_CLASH_API_URL}/clans/YV88PJ08/warlog?limit=100`, { headers: { Authorization: AuthStr } })
-        
-        const AuthStr = 'Bearer '.concat("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjA5MmVjNjQ0LTc2NTUtNGYwNC1iZGRiLTdmZjE4YmI1ODQ4ZSIsImlhdCI6MTY1ODgwMjY5NCwic3ViIjoiZGV2ZWxvcGVyL2FkMjY1NDA0LTE4NzMtY2NhMi02Yjc4LTMxZTYyZjBiY2E2OCIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI0NS43OS4yMTguNzkiXSwidHlwZSI6ImNsaWVudCJ9XX0._yFlZ5lOy3PzMeoVLEgHQTSGVOX49k5UO5lmq6ZBh6t1TkF4x0S0ALphriVGdp5hsMfNw51CCJqUnO7I_1Sgjg"); 
-        axios.get('https://api.royaleapi.com/clan/%23YV88PJ08/warlog', { headers: { Authorization: AuthStr } })
-        .then(response => {
-            // If request is good...
-            console.log(response.data);
-          })
-        .catch((error) => {
-            console.log('error ' + error);
-          });
-      },
       logar() {
         if (this.$refs.formLogin.validate()) {
-          this.buscarApi();
           this.$store.dispatch('login', this.user)
           .then((data) => {
               this.$router.replace({
