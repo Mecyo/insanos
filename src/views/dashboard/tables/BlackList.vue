@@ -165,6 +165,7 @@ export default {
           { text: 'Nickname', value: 'nickname' },
           { text: 'Banido por', value: 'banidoPor' },
           { text: 'Data de banimento', value: 'dataBanimento' },
+          { text: 'Motivo do banimento', value: 'motivoBanimento' },
           { text: 'Ações', value: 'actions', sortable: false },
         ],
         players: [],
