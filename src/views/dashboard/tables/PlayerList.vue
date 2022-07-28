@@ -21,7 +21,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="success" @click="closeBan">Cancelar</v-btn>
-          <v-btn color="warning" @click="banItemConfirm">Excluir</v-btn>
+          <v-btn color="warning" @click="banItemConfirm">Banir</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -64,7 +64,7 @@
         <template v-slot:item.actions="{ item }">
           <v-icon
             :class="isSuperUser() ? '' : 'hidden'"
-            color="warning"
+            color="yellow"
             small
             title="Tornar admin"
             @click="setToAdmin(item)"
@@ -72,8 +72,8 @@
             mdi-key-change
           </v-icon>
           <v-icon
-            :class="isSuperUser() ? '' : 'hidden'"
-            color="yellow"
+            :class="isAdminUser() ? '' : 'hidden'"
+            color="warning"
             small
             title="Banir player"
             @click="addToBlackList(item)"
@@ -136,6 +136,9 @@ export default {
       isSuperUser() {
         return this.$store.state.user.permissoes.includes('ROLE_SUPER');
       },
+      isAdminUser() {
+        return this.$store.state.user.permissoes.includes('ROLE_ADMIN');
+      },
       isPlayerOwner(player) {
         return this.$store.state.user.id === player.cliente.id;
       },
@@ -144,9 +147,9 @@ export default {
         this.banDialog = true;
       },
       banItemConfirm() {
-        api.post("/players/ban", player)
+        api.post("/players/ban", this.editedItem)
           .then(() => {
-            this.$toast.success(`Player ${player.nome} banido com sucesso!`, {
+            this.$toast.success(`Player ${this.editedItem.nome} banido com sucesso!`, {
                 dismissable: true,
                 x: 'center',
                 y: 'top',
