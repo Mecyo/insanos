@@ -15,6 +15,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="banDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">Tem certeza que deseja banir o player '{{this.editedItem.nickname}}'?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="closeBan">Cancelar</v-btn>
+          <v-btn color="warning" @click="banItemConfirm">Excluir</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-btn
       v-can="'ROLE_SUPER'"
       color="success"
@@ -61,6 +72,15 @@
             mdi-key-change
           </v-icon>
           <v-icon
+            :class="isSuperUser() ? '' : 'hidden'"
+            color="yellow"
+            small
+            title="Banir player"
+            @click="addToBlackList(item)"
+          >
+            mdi-account-cancel
+          </v-icon>
+          <v-icon
             :class="item.isOwner ? '' : 'hidden'"
             color="error"
             small
@@ -83,6 +103,7 @@ export default {
       return {
         loading: true,
         dialogDelete: false,
+        banDialog: false,
         editedIndex: -1,
         editedItem: {
           nickname: ''
@@ -118,6 +139,31 @@ export default {
       isPlayerOwner(player) {
         return this.$store.state.user.id === player.cliente.id;
       },
+      addToBlackList(player) {
+        this.editedItem = Object.assign({}, player);
+        this.banDialog = true;
+      },
+      banItemConfirm() {
+        api.post("/players/ban", player)
+          .then(() => {
+            this.$toast.success(`Player ${player.nome} banido com sucesso!`, {
+                dismissable: true,
+                x: 'center',
+                y: 'top',
+                timeout: 4000,
+              })
+          })
+          .catch((error) => {
+            this.$toast.error("Falha ao efetuar o banimento: " + error.response.data.titulo, {
+                dismissable: true,
+                x: 'center',
+                y: 'top',
+                timeout: 4000,
+              })
+            console.log(error);
+          });
+          this.banDialog = false;
+      },
       setToAdmin(item) {
         const cliente = item.cliente;
         api.get(`/clientes/set-to-admin/${cliente.id}`)
@@ -140,9 +186,9 @@ export default {
         });
       },
       deleteItem (item) {
-        this.editedIndex = this.players.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+        this.editedIndex = this.players.indexOf(item);
+        this.editedItem = Object.assign({}, item);
+        this.dialogDelete = true;
       },
       deleteItemConfirm () {
         api.delete(`/players/${this.editedItem.id}`)
@@ -172,6 +218,13 @@ export default {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         })
+      },
+      closeBan () {
+        this.banDialog = false;
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem);
+          this.editedIndex = -1;
+        });
       },
       enviarEmailSenha() {
         const ids = this.players.map(function(item){
