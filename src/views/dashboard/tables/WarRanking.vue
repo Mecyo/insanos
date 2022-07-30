@@ -41,10 +41,11 @@
     <v-form ref="form" class="mx-2" lazy-validation>
       <div v-can="'ROLE_ADMIN'">
         <v-file-input
-          v-model="file"
+          v-model="files"
           outlined
           show-size
           counter
+          multiple
           accept="image/png, image/jpeg, image/bmp"
           label="Selecione a imagem"
           prepend-icon="mdi-camera"
@@ -166,7 +167,7 @@ export default {
           { text: '', value: 'data-table-expand' },
         ],
         rankeds: [],
-        file: null,
+        files: [],
         week: null,
       }
     },
@@ -186,7 +187,10 @@ export default {
         if(this.$refs.form.validate()) {
           let formData = new FormData();
 
-          formData.append("file", this.file, this.file.name);
+          // files
+          for (let file of this.files) {
+              formData.append("files", file, file.name);
+          }
 
           api.post(`/ranking/calcular?week=${this.week}`, formData,{
             headers: {
