@@ -38,76 +38,161 @@
       </v-card>
     </v-dialog>
 
-    <v-form ref="form" class="mx-2" lazy-validation>
-      <div v-can="'ROLE_ADMIN'">
-        <v-file-input
-          v-model="files"
-          outlined
-          show-size
-          counter
-          multiple
-          accept="image/png, image/jpeg, image/bmp"
-          label="Selecione a imagem"
-          prepend-icon="mdi-camera"
-          :rules="[v => !!v || 'Imagem é obrigatória!']"
+    <div v-can="'ROLE_ADMIN'">
+      <v-card>
+        <v-tabs
+          background-color="success"
+          centered
+          dark
+          icons-and-text
         >
-          <template v-slot:selection="{ text }">
-            <v-chip
-              small
-              label
-              color="primary"
-            >
-              {{ text }}
-            </v-chip>
-          </template>
-        </v-file-input>
+          <v-tab>
+            Print
+            <v-icon>mdi-file-image-plus</v-icon>
+          </v-tab>
 
-        <v-row align="center">
-          <v-col
-            class="d-flex"
-            cols="4"
-            sm="3"
-          >
-            <v-select
-              v-model="week"
-              :items="[1,2,3,4]"
-              label="Semana"
-              dense
-              outlined
-              :rules="[v => !!v || 'Semana é obrigatória!']"
-            ></v-select>
-          </v-col>
-          <v-col
-            class="d-flex  margin-bottom-auto"
-            cols="4"
-            sm="2"
-          >
-            <v-btn
-              color="success"
-              default
-              class="mr-0"
-              @click="calcular"
-            >
-              Calcular
-            </v-btn>
-          </v-col>
-          <v-col
-            class="d-flex  margin-bottom-auto"
-            cols="2"
-            sm="2"
-          >
-            <v-btn
-              color="error"
-              default
-              class="mr-0"
-              @click="confirmDialog = true"
-            >
-              Resetar
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
-    </v-form>
+          <v-tab>
+            CSV
+            <v-icon>mdi-file-delimited</v-icon>
+          </v-tab>
+        
+          <v-tab-item>
+            <v-form ref="formPrint" class="mx-2" lazy-validation>
+              <v-file-input
+                v-model="files"
+                outlined
+                show-size
+                counter
+                multiple
+                accept="image/png, image/jpeg, image/bmp"
+                label="Selecione a imagem"
+                prepend-icon="mdi-camera"
+                :rules="[v => !!v || 'Imagem é obrigatória!']"
+              >
+                <template v-slot:selection="{ text }">
+                  <v-chip
+                    small
+                    label
+                    color="primary"
+                  >
+                    {{ text }}
+                  </v-chip>
+                </template>
+              </v-file-input>
+
+              <v-row align="center">
+                <v-col
+                  class="d-flex"
+                  cols="4"
+                  sm="3"
+                >
+                  <v-select
+                    v-model="week"
+                    :items="[1,2,3,4]"
+                    label="Semana"
+                    dense
+                    outlined
+                    :rules="[v => !!v || 'Semana é obrigatória!']"
+                  ></v-select>
+                </v-col>
+                <v-col
+                  class="d-flex  margin-bottom-auto"
+                  cols="4"
+                  sm="2"
+                >
+                  <v-btn
+                    color="success"
+                    default
+                    class="mr-0"
+                    @click="calcular"
+                  >
+                    Calcular
+                  </v-btn>
+                </v-col>
+                <v-col
+                  class="d-flex  margin-bottom-auto"
+                  cols="2"
+                  sm="2"
+                >
+                  <v-btn
+                    color="error"
+                    default
+                    class="mr-0"
+                    @click="confirmDialog = true"
+                  >
+                    Resetar
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-tab-item>
+        
+          <v-tab-item>
+            <v-form ref="formCsv" class="mx-2" lazy-validation>
+              <v-file-input
+                v-model="fileCsv"
+                outlined
+                show-size
+                counter
+                accept="text/csv"
+                label="Selecione o CSV"
+                prepend-icon="mdi-camera"
+                :rules="[v => !!v || 'CSV é obrigatório!']"
+              >
+                <template v-slot:selection="{ text }">
+                  <v-chip
+                    small
+                    label
+                    color="primary"
+                  >
+                    {{ text }}
+                  </v-chip>
+                </template>
+              </v-file-input>
+
+              <v-row align="center">
+                <v-col
+                  class="d-flex  margin-bottom-auto"
+                  cols="auto"
+                >
+                  <v-btn
+                    color="success"
+                    default
+                    class="mr-0"
+                    @click="calcularCsv"
+                  >
+                    Calcular
+                  </v-btn>
+                </v-col>
+                <v-col
+                  class="d-flex  margin-bottom-auto"
+                  cols="auto"
+                >
+                  <v-btn
+                    color="error"
+                    default
+                    class="mr-0"
+                    @click="confirmDialog = true"
+                  >
+                    Resetar
+                  </v-btn>
+                </v-col>
+                <v-col
+                  class="d-flex  margin-bottom-auto"
+                  cols="auto"
+                >
+                  <a
+                    href="https://royaleapi.com/clan/YV88PJ08/war/log/csv"
+                    rel="noopener"
+                    target="_blank"
+                  >Baixar CSV</a>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-tab-item>
+        </v-tabs>
+      </v-card>
+    </div>
     <base-material-card
       color="success"
       dark
@@ -168,6 +253,7 @@ export default {
         ],
         rankeds: [],
         files: [],
+        fileCsv: null,
         week: null,
       }
     },
@@ -183,8 +269,32 @@ export default {
         },
       },
     methods: {
+      calcularCsv() {
+        debugger
+        if(this.$refs.formCsv.validate()) {
+          let formData = new FormData();
+
+          formData.append("file", this.fileCsv, this.fileCsv.name);
+
+          api.post('/ranking/calcular-csv', formData,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then(response => {
+            if(response) {
+              this.rankeds = response.data;
+            }
+            this.$refs.formCsv.reset();
+            this.loading = false;
+          })
+          .catch(error => {
+            console.log({ error });
+          });
+        }
+      },
       calcular() {
-        if(this.$refs.form.validate()) {
+        if(this.$refs.formPrint.validate()) {
           let formData = new FormData();
 
           // files
@@ -201,7 +311,7 @@ export default {
             if(response) {
               this.rankeds = response.data;
             }
-            this.$refs.form.reset();
+            this.$refs.formPrint.reset();
             this.loading = false;
           })
           .catch(error => {
