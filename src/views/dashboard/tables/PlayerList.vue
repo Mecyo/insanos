@@ -15,6 +15,33 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogChangePass" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">Informe a nova senha:</v-card-title>
+          <v-form ref="form" class="mx-2" lazy-validation>
+            <v-container class="py-0">
+              <v-row>
+                <v-col
+                  cols="12"
+                  md="12"
+                >
+                  <v-text-field
+                    label="Nova senha"
+                    v-model="clienteInput.pass"
+                    :rules="[v => !!v || 'Nova Senha é obrigatório!']"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" @click="closeChangePass">Cancelar</v-btn>
+          <v-btn color="success" @click="changePassConfirm">Salvar</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="banDialog" max-width="500px">
       <v-card>
         <v-card-title class="text-h5">Tem certeza que deseja banir o player <strong style="color:red">{{this.editedItem.nickname}}</strong>?</v-card-title>
@@ -103,12 +130,21 @@
         <template v-slot:item.actions="{ item }">
           <v-icon
             :class="isSuperUser() && !item.dataBanimento ? '' : 'hidden'"
-            color="yellow"
+            color="green"
             small
             title="Tornar admin"
             @click="setToAdmin(item)"
           >
-            mdi-key-change
+            mdi-account-supervisor
+          </v-icon>
+          <v-icon
+            :class="isSuperUser() ? '' : 'hidden'"
+            color="yellow"
+            small
+            title="Trocar senha"
+            @click="changePassword(item)"
+          >
+            mdi-account-key
           </v-icon>
           <v-icon
             :class="isAdminUser() && !item.dataBanimento ? '' : 'hidden'"
@@ -136,13 +172,16 @@
 
 <script>
 import api from "@/api";
+import CryptoJS from 'crypto-js';
 
 export default {
     data () {
       return {
+        clienteInput: {id: 0, pass: ''},
         loading: true,
         dialogDelete: false,
         banDialog: false,
+        dialogChangePass: false,
         editedIndex: -1,
         editedItem: {
           nickname: ''
@@ -268,7 +307,46 @@ export default {
           this.editedIndex = -1
         })
       },
-      closeBan () {
+      closeChangePass() {
+        this.dialogChangePass = false;
+        this.$nextTick(() => {
+          this.novaSenha = ''
+        });
+      },
+      changePassword(item) {
+        this.clienteInput.id = item.cliente.id;
+        this.dialogChangePass = true;
+      },
+      changePassConfirm() {
+        var encrypted = CryptoJS.AES.encrypt(this.clienteInput.pass, "insanosKey");
+        console.log("encrypted " + encrypted);
+        var decrypted = CryptoJS.AES.decrypt(encrypted, "insanosKey");
+        var plainText = decrypted.toString(CryptoJS.enc.Utf8)
+        console.log("decrypted " + plainText);
+
+        this.clienteInput.pass = encrypted.toString();
+
+        api.post(`/clientes/change-password`, this.clienteInput)
+        .then(() => {
+          this.$toast.success(`Senha alterada com sucesso!`, {
+              dismissable: true,
+              x: 'center',
+              y: 'top',
+              timeout: 4000,
+            })
+        })
+        .catch((error) => {
+          this.$toast.error("Falha ao alterar a senha", {
+              dismissable: true,
+              x: 'center',
+              y: 'top',
+              timeout: 4000,
+            })
+          console.log(error);
+        });
+        this.closeChangePass();
+      },
+      closeBan() {
         this.banDialog = false;
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem);
