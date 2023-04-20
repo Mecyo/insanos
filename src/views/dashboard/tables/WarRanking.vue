@@ -270,7 +270,6 @@ export default {
       },
     methods: {
       calcularCsv() {
-        debugger
         if(this.$refs.formCsv.validate()) {
           let formData = new FormData();
 

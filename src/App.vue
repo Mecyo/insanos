@@ -19,4 +19,8 @@ export default {
   .hidden {
     display: none !important;
   }
+
+  .force-color-black {
+    color: black !important;
+  }
 </style>

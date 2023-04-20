@@ -34,6 +34,13 @@ export default [
       items: []
     },
     {
+      title: 'Torneio',
+      icon: 'mdi-trophy',
+      path: 'torneio',
+      requireRoles: ['ROLE_USER'],
+      items: []
+    },
+    {
       title: 'Notifications',
       icon: 'mdi-bell',
       path: 'notifications',

@@ -1,6 +1,19 @@
+### Auth
+
+POST https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/authenticate  HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "ejsmao@hotmail.com",
+    "password": "Mecyo@1985"
+}
+
+####
+
+
 POST https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/clientes/change-password  HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE0NTEzMzAsImlhdCI6MTY4MTQzMzMzMH0.T2SIgg6IPw2Om1b3jTjX_idY1ogeeJWgn_2CX6kv46KSgy3yinV5Qr2XKFds5DOeSvblnuiv08w8l1wgmUcw_g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE1NDg0NzgsImlhdCI6MTY4MTUzMDQ3OH0.whKAN_-R0j8Vw5zT8Nd4__1d1jcDmwDe5ws2YVjDxz9NUIiWSovHd5LbnynpkswoNyZ1stFJQIrxFeIYni6ubw
 
 {
     "id": 2,
@@ -12,4 +25,37 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iL
 ###
 
 GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/clientes/set-to-admin/2  HTTP/1.1
-authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE0NTEzMzAsImlhdCI6MTY4MTQzMzMzMH0.T2SIgg6IPw2Om1b3jTjX_idY1ogeeJWgn_2CX6kv46KSgy3yinV5Qr2XKFds5DOeSvblnuiv08w8l1wgmUcw_g
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE1NDg0NzgsImlhdCI6MTY4MTUzMDQ3OH0.whKAN_-R0j8Vw5zT8Nd4__1d1jcDmwDe5ws2YVjDxz9NUIiWSovHd5LbnynpkswoNyZ1stFJQIrxFeIYni6ubw
+
+
+
+
+#### Iniciar Torneio
+
+GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/torneios/iniciarTorneio  HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE2MzQxNTYsImlhdCI6MTY4MTYxNjE1Nn0.hPAz2BZC1VR5Vgmuwl20w0NpwcRRHRT113m4B8XQoMYcpiSFtTwjwcjAQ559Ud5DOqn_AxFJVMUQ9izwewDcUQ
+
+
+
+#### GetOitavas
+
+GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/torneios/getOitavasDeFinal  HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE2MzQxNTYsImlhdCI6MTY4MTYxNjE1Nn0.hPAz2BZC1VR5Vgmuwl20w0NpwcRRHRT113m4B8XQoMYcpiSFtTwjwcjAQ559Ud5DOqn_AxFJVMUQ9izwewDcUQ
+
+
+#### GetQuartasDeFinal
+
+GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/torneios/getQuartasDeFinal  HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE2MzQxNTYsImlhdCI6MTY4MTYxNjE1Nn0.hPAz2BZC1VR5Vgmuwl20w0NpwcRRHRT113m4B8XQoMYcpiSFtTwjwcjAQ559Ud5DOqn_AxFJVMUQ9izwewDcUQ
+
+
+#### GetSemiFinal
+
+GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/torneios/getSemiFinal  HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE2MzQxNTYsImlhdCI6MTY4MTYxNjE1Nn0.hPAz2BZC1VR5Vgmuwl20w0NpwcRRHRT113m4B8XQoMYcpiSFtTwjwcjAQ559Ud5DOqn_AxFJVMUQ9izwewDcUQ
+
+
+#### GetFinal
+
+GET https://8090-mecyo-mergulhospringre-6zgjg8m8016.ws-us94.gitpod.io/torneios/getPartidaFinal  HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlanNtYW9AaG90bWFpbC5jb20iLCJleHAiOjE2ODE2MzQxNTYsImlhdCI6MTY4MTYxNjE1Nn0.hPAz2BZC1VR5Vgmuwl20w0NpwcRRHRT113m4B8XQoMYcpiSFtTwjwcjAQ559Ud5DOqn_AxFJVMUQ9izwewDcUQ

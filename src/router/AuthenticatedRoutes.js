@@ -56,4 +56,13 @@ export default [
       requireRoles: ['ROLE_USER']
     },
   },
+  {
+    name: 'Torneio',
+    path: 'torneio',
+    component: () => import('@/views/dashboard/pages/Torneio'),
+    meta: {
+      requiresAuth: true,
+      requireRoles: ['ROLE_USER']
+    },
+  },
 ];
