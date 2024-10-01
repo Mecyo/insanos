@@ -19,7 +19,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn 
+          <v-btn
             color="error"
             default
             @click="resetar"
@@ -33,6 +33,46 @@
             @click="confirmDialog = false"
           >
             Não
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="csvDialog"
+      persistent
+      max-width="400px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Informe a TAG do clan para baixar o CSV e calcular</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="formCsv" class="mx-2" lazy-validation>
+            <v-text-field
+              class="purple-input"
+              label="Tag do clan"
+              v-model="csvClanTag"
+              :rules="[v => !!v || 'Nick é obrigatório!']"
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            default
+            @click="csvDialog = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="success"
+            default
+            class="mr-0"
+            @click="baixarCsv"
+          >
+            Baixar e calcular
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -55,7 +95,7 @@
             CSV
             <v-icon>mdi-file-delimited</v-icon>
           </v-tab>
-        
+
           <v-tab-item>
             <v-form ref="formPrint" class="mx-2" lazy-validation>
               <v-file-input
@@ -126,69 +166,36 @@
               </v-row>
             </v-form>
           </v-tab-item>
-        
-          <v-tab-item>
-            <v-form ref="formCsv" class="mx-2" lazy-validation>
-              <v-file-input
-                v-model="fileCsv"
-                outlined
-                show-size
-                counter
-                accept="text/csv"
-                label="Selecione o CSV"
-                prepend-icon="mdi-camera"
-                :rules="[v => !!v || 'CSV é obrigatório!']"
-              >
-                <template v-slot:selection="{ text }">
-                  <v-chip
-                    small
-                    label
-                    color="primary"
-                  >
-                    {{ text }}
-                  </v-chip>
-                </template>
-              </v-file-input>
 
-              <v-row align="center">
-                <v-col
-                  class="d-flex  margin-bottom-auto"
-                  cols="auto"
+          <v-tab-item>
+            <v-row align="center">
+              <v-col
+                class="d-flex  margin-bottom-auto"
+                cols="auto"
+              >
+                <v-btn
+                  color="success"
+                  default
+                  class="mr-0"
+                  @click="csvDialog = true"
                 >
-                  <v-btn
-                    color="success"
-                    default
-                    class="mr-0"
-                    @click="calcularCsv"
-                  >
-                    Calcular
-                  </v-btn>
-                </v-col>
-                <v-col
-                  class="d-flex  margin-bottom-auto"
-                  cols="auto"
+                  Calcular
+                </v-btn>
+              </v-col>
+              <v-col
+                class="d-flex  margin-bottom-auto"
+                cols="auto"
+              >
+                <v-btn
+                  color="error"
+                  default
+                  class="mr-0"
+                  @click="confirmDialog = true"
                 >
-                  <v-btn
-                    color="error"
-                    default
-                    class="mr-0"
-                    @click="confirmDialog = true"
-                  >
-                    Resetar
-                  </v-btn>
-                </v-col>
-                <v-col
-                  class="d-flex  margin-bottom-auto"
-                  cols="auto"
-                >
-                  <a
-                    href="https://royaleapi.com/clan/YV88PJ08/war/log/csv"
-                    rel="noopener"
-                    target="_blank"
-                  >Baixar CSV</a>
-                </v-col>
-              </v-row>
-            </v-form>
+                  Resetar
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -234,12 +241,14 @@
 
 <script>
 import api from "@/api";
+import axios from "axios";
 
 export default {
     data () {
       return {
         expanded: [],
         confirmDialog: false,
+        csvDialog: false,
         loading: true,
         headers: [
           {
@@ -254,6 +263,8 @@ export default {
         rankeds: [],
         files: [],
         fileCsv: null,
+        csvClanTag: '',
+        csvUrl: 'https://royaleapi.com/clan/QJO8V829/war/log/csv',
         week: null,
       }
     },
@@ -269,8 +280,23 @@ export default {
         },
       },
     methods: {
+      async baixarCsv() {
+        if(this.$refs.formCsv.validate()) {
+          const response = await axios.get(`https://royaleapi.com/clan/${csvClanTag}/war/log/csv`, {
+            responseType: 'blob', // Define a resposta como um Blob (arquivo binário)
+          });
+
+          console.log('RESPONSE:' + response);
+
+          // Crie um Blob com o CSV baixado
+          this.fileCsv = new Blob([response.data], { type: 'text/csv' });
+
+          console.log('CSV-BLOB:' + this.fileCsv);
+
+          this.csvDialog = false;
+        }
+      },
       calcularCsv() {
-        debugger
         if(this.$refs.formCsv.validate()) {
           let formData = new FormData();
 
@@ -324,7 +350,7 @@ export default {
         .then((response) => {
           if(response) {
             this.rankeds = [];
-            this.$toast.success("Reset efetuado com sucesso!");   
+            this.$toast.success("Reset efetuado com sucesso!");
           }
         })
         .catch((error) => {
