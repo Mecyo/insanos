@@ -38,6 +38,46 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog
+      v-model="csvDialog"
+      persistent
+      max-width="400px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Informe a TAG do clan para baixar o CSV</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="formCsv" class="mx-2" lazy-validation>
+            <v-text-field
+              class="purple-input"
+              label="Tag do clan"
+              v-model="csvClanTag"
+              :rules="[v => !!v || 'TAG é obrigatória!']"
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            default
+            @click="csvDialog = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="success"
+            default
+            class="mr-0"
+            @click="baixarCsv"
+          >
+            Baixar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div v-can="'ROLE_ADMIN'">
       <v-card>
         <v-tabs
@@ -181,11 +221,14 @@
                   class="d-flex  margin-bottom-auto"
                   cols="auto"
                 >
-                  <a
-                    href="https://royaleapi.com/clan/YV88PJ08/war/log/csv"
-                    rel="noopener"
-                    target="_blank"
-                  >Baixar CSV</a>
+                  <v-btn
+                    color="success"
+                    default
+                    class="mr-0"
+                    @click="csvDialog = true"
+                  >
+                  Baixar CSV
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-form>
@@ -241,6 +284,8 @@ export default {
         expanded: [],
         confirmDialog: false,
         loading: true,
+        csvClanTag: '',
+        csvDialog: false,
         headers: [
           {
             text: 'Posição',
@@ -269,6 +314,14 @@ export default {
         },
       },
     methods: {
+      async baixarCsv() {
+        if(this.$refs.formCsv.validate()) {
+          const url = `https://royaleapi.com/clan/${this.csvClanTag}/war/log/csv`;
+
+          this.csvDialog = false;
+          window.location.href = url;
+        }
+      },
       calcularCsv() {
         debugger
         if(this.$refs.formCsv.validate()) {
